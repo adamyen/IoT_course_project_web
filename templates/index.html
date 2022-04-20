@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>G17</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+  var socket = io();
+
+  function appendItem(txt, id) {
+    const ul = document.getElementById(id);
+    const li = document.createElement("li");
+    li.appendChild(document.createTextNode(txt));
+    ul.appendChild(li);
+  }
+
+  socket.on('connect', function() {
+    socket.emit('connected', {data: 'I\'m connected!'});
+  });
+
+  socket.on('message', function(msg) {
+    console.log('>>>', msg);
+    const splitMsg = msg.split('-');
+    const target = splitMsg[0] === 'item' ? 'item_list' : 'sug_list';
+    appendItem(splitMsg[1], target);
+  })
+</script>
+<body>
+  <h2>G17 Assignment 4</h2>
+  <div>
+    <div>
+      <h3>Scanned item</h3>
+      <ul id="item_list"></ul>
+    </div>
+    <div>
+      <h3>Suggestions</h3>
+      <ul id="sug_list"></ul>
+    </div>
+  </div>
+</body>
+</html>
