@@ -6,7 +6,8 @@ import wiotp.sdk.application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
-
+prefix = 123
+payload = ["1","2", "3"]
 TOPICS = ["CustomerId"]
 
 def mqtt_sub_callback(evt):
@@ -22,7 +23,7 @@ def mqtt_sub_callback(evt):
     else:
         prefix = 'item' if payload[1] == 'scanned_item' else 'sug'
         print(f"{prefix}-{payload[2].lstrip(' ')}")
-        send('foo', f"{prefix}-{payload[2].lstrip(' ')}")
+        socketio.send(f"{prefix}-{payload[2].lstrip(' ')}")
 
 def publish(client, topic, payload, qos = 2, retain = False):
     result = client.publish(topic, payload, qos, retain)
@@ -31,6 +32,7 @@ def publish(client, topic, payload, qos = 2, retain = False):
         print(f"Send to topic `{topic}`:    {payload}")
     else:
         print(f"Failed to send message to topic {topic}")
+
 
 @socketio.on('connected')
 def handle_my_custom_event(json):
