@@ -52,7 +52,9 @@ def handle_my_custom_event(json):
 
 @socketio.on('checkout')
 def handle_checkout():
+    global sum
     result = client.publishEvent(typeId="RaspberryPi", deviceId="project", eventId=f"{user_id}:reset", msgFormat="json", data={'action': 'reset'}, qos = 2)
+    sum = 0
     print(f"-----> Check out complete: {result}")
 
 @app.route("/")
